@@ -48,9 +48,9 @@ export default [
     'va-button-dropdown/Events',
   ),
   ...DocsHelper.exampleBlock(
-    'buttonDropdown.examples.dropdown.title',
-    'buttonDropdown.examples.dropdown.text',
-    'va-button-dropdown/Dropdown',
+    'buttonDropdown.examples.clickInside.title',
+    'buttonDropdown.examples.clickInside.text',
+    'va-button-dropdown/ClickInside',
   ),
   DocsHelper.subtitle('all.api'),
   DocsHelper.api(VaButtonDropdown, apiOptions),

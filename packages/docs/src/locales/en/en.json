@@ -3034,9 +3034,9 @@
         "title": "Events",
         "text": "The `va-dropdown-button` can handle click events."
       },
-      "dropdown": {
-        "title": "Dropdown",
-        "text": "You could set the dropdown content to be closed or not after clicking on it."
+      "clickInside": {
+        "title": "Click inside",
+        "text": "You could set the dropdown to be closed or not after clicking on it."
       }
     }
   },
