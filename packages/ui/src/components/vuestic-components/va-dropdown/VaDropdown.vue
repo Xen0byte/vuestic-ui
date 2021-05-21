@@ -4,8 +4,8 @@
       class="va-dropdown__anchor"
       @mouseover="onMouseOver()"
       @mouseout="onMouseOut()"
-      @click="onAnchorClick()"
-      @keyup.enter.stop.prevent="onAnchorClick()"
+      @click="onElementClick('anchor-click')"
+      @keyup.enter.stop.prevent="onElementClick('anchor-click')"
       ref="anchor"
     >
       <slot name="anchor" />
@@ -15,7 +15,7 @@
         class="va-dropdown__content-wrapper"
         @mouseover="$props.isContentHoverable && onMouseOver()"
         @mouseout="onMouseOut()"
-        @click="$props.closeOnClickInside && onAnchorClick()"
+        @click="$props.closeOnClickInside && onElementClick('dropdown-click')"
         ref="contentWrapper"
       >
         <div :style="$props.keepAnchorWidth ? anchorWidthStyles : ''">
@@ -65,7 +65,7 @@ const DropdownPropsMixin = Vue.with(DropdownProps)
 
 @Options({
   name: 'VaDropdown',
-  emits: ['update:modelValue', 'anchor-click', 'click-outside', 'trigger'],
+  emits: ['update:modelValue', 'anchor-click', 'click-outside', 'dropdown-click', 'trigger'],
 })
 export default class VaDropdown extends mixins(DropdownPropsMixin) {
   popperInstance: PopperInstance = null
@@ -130,13 +130,21 @@ export default class VaDropdown extends mixins(DropdownPropsMixin) {
     })
   }
 
-  onAnchorClick (): void {
-    this.$emit('anchor-click')
+  onElementClick (element: string): void {
     if (this.disabled) {
       return
     }
-    if (this.isClicked && !this.closeOnAnchorClick) {
-      return
+    if (element === 'anchor-click') {
+      this.$emit(element)
+      if (this.isClicked && !this.closeOnAnchorClick) {
+        return
+      }
+    }
+    if (element === 'dropdown-click') {
+      this.$emit(element)
+      if (this.isClicked && !this.closeOnClickInside) {
+        return
+      }
     }
     this.isClicked = !this.isClicked
   }
