@@ -4,8 +4,8 @@
       class="va-dropdown__anchor"
       @mouseover="onMouseOver()"
       @mouseout="onMouseOut()"
-      @click="onElementClick('anchor-click')"
-      @keyup.enter.stop.prevent="onElementClick('anchor-click')"
+      @click="onAnchorClick()"
+      @keyup.enter.stop.prevent="onAnchorClick()"
       ref="anchor"
     >
       <slot name="anchor" />
@@ -15,7 +15,7 @@
         class="va-dropdown__content-wrapper"
         @mouseover="$props.isContentHoverable && onMouseOver()"
         @mouseout="onMouseOut()"
-        @click="$props.closeOnClickInside && onElementClick('dropdown-click')"
+        @click="onDropdownContentClick()"
         ref="contentWrapper"
       >
         <div :style="$props.keepAnchorWidth ? anchorWidthStyles : ''">
@@ -65,7 +65,7 @@ const DropdownPropsMixin = Vue.with(DropdownProps)
 
 @Options({
   name: 'VaDropdown',
-  emits: ['update:modelValue', 'anchor-click', 'click-outside', 'dropdown-click', 'trigger'],
+  emits: ['update:modelValue', 'anchor-click', 'click-outside', 'dropdown-content-click', 'trigger'],
 })
 export default class VaDropdown extends mixins(DropdownPropsMixin) {
   popperInstance: PopperInstance = null
@@ -130,23 +130,27 @@ export default class VaDropdown extends mixins(DropdownPropsMixin) {
     })
   }
 
-  onElementClick (element: string): void {
+  handleInsideClick (signalName: string, toClose: boolean): void {
+    this.$emit(signalName)
+    if (toClose) {
+      this.isClicked = !this.isClicked
+    }
+  }
+
+  onDropdownContentClick (): void {
+    this.handleInsideClick('dropdown-content-click', this.closeOnClickInside)
+  }
+
+  onAnchorClick (): void {
     if (this.disabled) {
       return
     }
-    if (element === 'anchor-click') {
-      this.$emit(element)
-      if (this.isClicked && !this.closeOnAnchorClick) {
-        return
-      }
+    if (this.isClicked) {
+      this.handleInsideClick('anchor-click', this.closeOnAnchorClick)
+      return
     }
-    if (element === 'dropdown-click') {
-      this.$emit(element)
-      if (this.isClicked && !this.closeOnClickInside) {
-        return
-      }
-    }
-    this.isClicked = !this.isClicked
+    this.isClicked = true
+    this.$emit('anchor-click')
   }
 
   // Kinda complex logic here.
