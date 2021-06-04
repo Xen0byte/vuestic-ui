@@ -228,7 +228,9 @@
     </VbCard>
 
     <VbCard title="Nesting 3x">
-      <va-dropdown debug-id="1">
+      <va-dropdown debug-id="1"
+        close-on-click-inside=false
+      >
         <template #anchor>
           <button>
             Click
